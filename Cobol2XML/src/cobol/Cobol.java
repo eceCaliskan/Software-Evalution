@@ -1,5 +1,6 @@
 /*
  * @(#)Cobol.java	 0.0.1
+
  *
  * Copyright (c) 2019 Julian M. Bass
  *
@@ -31,8 +32,57 @@ public class Cobol implements PubliclyCloneable {
 	protected int dayDateWritten = 0;
 	protected String monthDateWritten;
 	protected int yearDateWritten = 0;
+	protected String constantName;
+	protected double constantValue; 
+	protected String remarks;
+	protected String mainLogic;
+    protected int lineNumber = 0;
+    
+    
+    
+    public String getMainLogic() {
+		return mainLogic;
+	}
+	public void setMainLogic(String mainLogic) {
+		this.mainLogic = mainLogic;
+	}
 
+    
+    
+	public String getRemarks() {
+		return remarks;
+	}
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 	
+	              
+	
+	
+	public String getProgram_id() {
+		return program_id;
+	}
+	public void setProgram_id(String program_id) {
+		this.program_id = program_id;
+	}
+	public String getConstantName() {
+		return constantName;
+	}
+	public void setConstantName(String constantName) {
+		this.constantName = constantName;
+	}
+	public double getConstantValue() {
+		return constantValue;
+	}
+	public void setConstantValue(double constantValue) {
+		this.constantValue = constantValue;
+	}
+	public int getLineNumber() {
+		return lineNumber;
+	}
+	public void setLineNumber(int lineNumber) {
+		this.lineNumber = lineNumber;
+	}
 	/**
 	 * Return a copy of this object.
 	 *
