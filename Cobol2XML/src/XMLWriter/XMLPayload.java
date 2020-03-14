@@ -20,6 +20,8 @@
  */package XMLWriter;
 
 import cobol.*;
+
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import javax.xml.parsers.DocumentBuilder;
@@ -70,6 +72,33 @@ public class XMLPayload {
 			//System.out.println("Section Name null");
 		}
 		
+		String remarks = c.getRemarks(); 
+		if (remarks != null) {
+			this.addProgram_remark(remarks); //System.out.println("Got Section");
+			// Add contents of procedure division
+			} else {
+			//System.out.println("Comment Line null");
+			}
+		
+		String mainLogic = c.getMainLogic(); 
+		if (mainLogic != null) {
+			this.addMainLogic(mainLogic); //System.out.println("Got Section");
+			// Add contents of procedure division
+			} else {
+			//System.out.println("Comment Line null");
+			}
+		
+		
+		
+		
+		
+		String commentLine = c.getCommentLine(); if (commentLine != null) {
+			this.addCommentLineElement( commentLine ); //System.out.println("Got Section");
+			// Add contents of procedure division
+			} else {
+			//System.out.println("Comment Line null");
+			}
+		
 		/*
 		 *  add divisionName element
 		 */		
@@ -82,6 +111,23 @@ public class XMLPayload {
 			//System.out.println("Division Name null");
 		}
 		
+		/*
+			 *  add commentLine element
+			*/
+			String constantName = c.getConstantName(); if (constantName != null) {
+			this.addConstantValueElement( constantName, c.getConstantValue(), c.getLineNumber() ); //System.out.println("Got Section");
+			// Add contents of procedure division
+			} else {
+			//System.out.println("Comment Line null");
+			}
+			
+		
+		
+		
+			
+			
+			
+			
 		/*
 		 *  add ProgramID element
 		 */		
@@ -132,6 +178,29 @@ public class XMLPayload {
 		}
 	}
  	
+ 	
+ 	void addProgram_remark(String stringElement) {
+		//  Program ID element
+		
+		if(stringElement != null) {
+			Element cobolname = doc.createElement("remarks");
+			cobolname.appendChild(doc.createTextNode(stringElement));
+			rootElement.appendChild(cobolname);
+		}
+	}
+ 	
+ 	
+ 	void addMainLogic(String stringElement) {
+		//  Program ID element
+		
+		if(stringElement != null) {
+			Element cobolname = doc.createElement("main-logic");
+			cobolname.appendChild(doc.createTextNode(stringElement));
+			rootElement.appendChild(cobolname);
+		}
+	}
+ 	
+ 	
 	void addCommentLineElement(String stringElement) {
 		//  Comment Line element
 		
@@ -173,6 +242,12 @@ public class XMLPayload {
 			rootElement.appendChild(cobolname);
 		}
 	}
+	
+
+
+	
+	
+	
  	
 	void addMonthDateWrittenElement(String stringElement) {
 		//  MonthWritten element
@@ -219,5 +294,23 @@ public class XMLPayload {
 	         e.printStackTrace();
 	     }
 	}
+
+	
+	void addConstantValueElement(String constantName, double constantValue, int lineNumber) {
+	     //  Program ID element
+	if(constantName != null) {
+	Element cobolname = doc.createElement("Constant");
+	           // insert name of constant into XML file
+	Element constID = doc.createElement("Constant"); Attr attrType2 =doc.createAttribute("Name" ); attrType2.setValue( constantName ); constID.setAttributeNode(attrType2); cobolname.appendChild(constID);
+	           // insert line number of constant into XML file
+	Element lineID = doc.createElement(constantName); Attr attrType = doc.createAttribute("Line_Number" ); attrType.setValue( Integer.toString(lineNumber) ); lineID.setAttributeNode(attrType); cobolname.appendChild(lineID);
+	           // insert value of constant into XML file
+	Element constantID = doc.createElement(constantName); Attr attrType1 =doc.createAttribute("Value" ); attrType1.setValue( Double.toString(constantValue) ); constantID.setAttributeNode(attrType1); cobolname.appendChild(constantID);
+	           rootElement.appendChild(cobolname);
+	     }
+	
+
+	}
+	
 
 }
