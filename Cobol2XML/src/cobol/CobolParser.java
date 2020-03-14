@@ -1,5 +1,6 @@
 /*
  * @(#)CobolParser.java	 0.1.0
+
  *
  * Copyright (c) 2019 Julian M. Bass
  *
@@ -21,6 +22,7 @@
 package cobol;
 
 import parse.Alternation;
+
 import parse.Repetition;
 import parse.Empty;
 import parse.Parser;
@@ -45,23 +47,23 @@ public class CobolParser {
 	 */
 	public Parser cobol() {
 		Alternation a = new Alternation();
+		 a.add( constantValue() );
+		 a.add( commentLine() );
 		
+	
 		Symbol fullstop = new Symbol('.');
 		fullstop.discard();
-		
 		a.add( ProgramID() );
-		
 		a.add( DivisionName() );
-		
+	    a.add(Remarks());
+		a.add(MainLogic());
 		a.add( SectionName() );
-		
-		a.add( DateWritten() );
-		
+	    a.add( DateWritten() );
 		a.add(new Empty());
 		return a;
 	}
 	
-	/*
+	/*              
 	 * Return a parser that will recognize the grammar:
 	 * 
 	 *    Program Identifier = Word;
@@ -106,6 +108,8 @@ public class CobolParser {
 		return s;
 	}
 	
+
+	
 	/*
 	 * Return a parser that will recognise the grammar:
 	 * 
@@ -125,6 +129,7 @@ public class CobolParser {
 		s.add(new Word().discard());
 		s.add(new Symbol('.').discard());
 		s.setAssembler(new DateAssembler());
+		
 		return s;
 	}
 
@@ -151,4 +156,56 @@ public class CobolParser {
 		return t;
 	}
 
+	/*
+	 * Return a parser that will recognize the grammar:
+	 *
+	 *    <line number> <contstant name> "value" <constant value>.
+	 *
+	 */
+	protected Parser constantValue() { 
+		//System.out.println("constantValue()"); 
+		Sequence s = new Sequence();
+	s.add(new Num() );
+	s.add(new Word() );
+	s.add(new CaselessLiteral("value") ); 
+	s.add(new Num() );
+	s.setAssembler(new ConstantValueAssembler()); return s;
+	}
+	
+	protected Parser commentLine() { //System.out.println("commentLine()");
+		Sequence s = new Sequence();
+		s.add(new Symbol("*"));
+		s.add(new Symbol("*"));
+		s.add(new Symbol("*"));
+		s.add(new Symbol("-"));
+		s.add(new Symbol("-"));
+		s.add(new Symbol("-"));
+		s.add(new Word().setAssembler(new CommentLineAssembler()) ); //s.setAssembler(new CommentLineAssembler());
+		return s;
+		}
+	
+	//this method is to create the remarks part
+	protected Parser Remarks() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("remarks") );
+		s.add(new Symbol('.').discard());	
+		s.add(new Word().setAssembler(new RemarksAssembler()));
+		return s;
+		
+	}
+	
+	//this method is to create the main logic part
+	protected Parser MainLogic() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("main-logic") );
+		s.add(new Symbol(".").discard());
+		s.add(new Word());
+		s.add(new Word().setAssembler(new MainLogicAssembler()));
+		
+		return s;
+		
+	}
+	
+	
+	
 }
