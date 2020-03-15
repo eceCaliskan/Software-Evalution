@@ -197,11 +197,10 @@ public class CobolParser {
 	//this method is to create the main logic part
 	protected Parser MainLogic() {
 		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("main-logic") );
-		s.add(new Symbol(".").discard());
-		s.add(new Word());
+		s.add(new CaselessLiteral("display") );
+		s.add(new Symbol("\"").discard());	
 		s.add(new Word().setAssembler(new MainLogicAssembler()));
-		
+		s.add(new Symbol("\"").discard());	
 		return s;
 		
 	}

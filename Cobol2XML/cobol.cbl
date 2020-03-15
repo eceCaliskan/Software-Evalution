@@ -4,9 +4,9 @@ program-id.  base.
 
 date-written.  07-mar-1995 - mb.
 
-remarks.
+remarks. 
 
-     This program convert a value of a generic system base to a numeric value
+     This program convert a value of a generic system base to a numeric value                                
      and viceversa.
 
 data division.
