@@ -25,12 +25,15 @@ package cobol;
 import XMLWriter.*;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import parse.*;
 import parse.tokens.*;
 
 public class Cobol2XML {
+	
 	/**
 	 * Recognise some basic constructs in a COBOL source code file.
 	 * And then produce a well-formed XML file with the data identified
@@ -49,6 +52,7 @@ public class Cobol2XML {
 	 */
 	public static void main(String[] args) throws Exception {
 		System.out.println("Cobol2XML V0.1.0");
+
 		XMLPayload xmlp = new XMLPayload();
 		
 		/* The first command line paprameter is used to get the cobol source file namee
@@ -62,11 +66,12 @@ public class Cobol2XML {
 		 * A rather crude approach is to hard code the filename for the cobol source file, like this
 		 * InputStream is = new FileInputStream("C:\\Users\\sgs442\\eclipse-workspace\\CobolParser1\\base.cbl");
 		 */
-		InputStream is = new FileInputStream(args[0]);
+		InputStream is = new FileInputStream("/Users/ececaliskan/git/Software-Evalutionfinal/Cobol2XML/cobol.cbl");
 		BufferedReader r = 	new BufferedReader(new InputStreamReader(is));
 
 		Tokenizer t = CobolParser.tokenizer();
 		Parser p = CobolParser.start();
+		
 		
 		
 		// Look through source code file line by line
@@ -78,33 +83,78 @@ public class Cobol2XML {
 			}
 			            
 			
-			if(s.contains("remarks.") )  {
-				String line1 =r.readLine(); //first line is space
-				while(!line1.contains(".")  ) {
-				String line2 =r.readLine(); //second line actual remark starts
-				line1 +=  line2.trim() + "  ";       // to all the lines together
-				
-		    }
-			s=s+line1;	
+			String line1="";
+			String line2="";
+			//to deal with the remarks part
+			if(s.contains("remarks") )  {
+				line1 =r.readLine(); //first line is space
+				while(!line1.contains(".") ||  !line1.contains("")) {
+				line2 =r.readLine(); //second line actual remark starts
+				line1 +=  line2.trim() + " ";       // to all the lines together
 			
-			}
-			
-			if(s.contains("display") )  {
-			
-				
-				String line2="";
-			Scanner scanner = new Scanner(s); 
-			if(!s.isEmpty()) {
-			line2="";
-				String line3 = scanner.next();
-				if(scanner.hasNext()) {
-					line2 += scanner.next();
 				}
-				s= line3+line2;
+			s=s+line1;	
+			s=s.replaceAll("\"", "");
+			}
+		
+			if(s.contains("main-logic."))  {
+				line1 =r.readLine(); //first line is space
+				if(!line1.contains(".") || !line1.contains("")) {
+				line2 =r.readLine(); //second line actual remark starts
+			    line1 += line2  ;       // to all the lines together
+				}
+			s="main-logic."+line1;	 
 			}
 			
 			
+					
+
+			
+			if(  s.contains("decimal-to-base")    ) {
+			  if(!line1.contains("perform "))
+			      line1 =r.readLine(); //first line is space
+			      line2 += line1;
+			      line1 =r.readLine(); //first line is space
+			      line2 += line1;
+			      line1 =r.readLine(); //first line is space
+			      line2 += line1;
+			      s=s+line2;	
 			}
+			
+			if(  s.contains("divide")   ) {
+				   line1 =r.readLine(); //first line is space
+				   s=s+line1;	
+			}
+			
+	
+			if(  s.contains("search")   ) {
+			line1=r.readLine();
+			while(!line1.contains("end_search")) {
+				line2 +=line1;
+				line1=r.readLine();
+			}
+			 s=s+line2;
+		
+		   }
+			
+			if(  s.equals("       search all hex_table          at end               continue          when hex_value( hex_idx ) is = entry_char(ind:1)               move dec_value( hex_idx) to rest_divide")){
+				
+				s= "dd"+s;
+					
+				
+				}
+			
+			if(s.contains("if")) {
+				line1 =r.readLine(); //first line is space
+				while(!line1.contains(".") ||  !line1.contains("")) {
+				line2 =r.readLine(); //second line actual remark starts
+				line1 +=  line2.trim() + " ";       // to all the lines together
+			
+				}
+			s=s+line1;	
+			s=s.replaceAll("\"", "");
+			}
+				
 			
 			
 			
@@ -113,14 +163,26 @@ public class Cobol2XML {
 			Assembly in = new TokenAssembly(t);
 			Assembly out = p.bestMatch(in);
 			Cobol c = new Cobol();
+			
+			
 			c = (Cobol) out.getTarget();
 			
 			if(c != null)
+				
 				xmlp.addElements(c); 
 			
 		}
-		xmlp.writeFile(args[1]);
+		xmlp.writeFile("/Users/ececaliskan/git/Software-Evalutionfinal/Cobol2XML/ output.xml");
 		r.close();
+		Cobol c2 =new Cobol();
+		String s1= c2.getCommentLine();
+		
+	
+		}
+		
 	}
+	
+	
 
-}
+
+

@@ -55,10 +55,19 @@ public class CobolParser {
 		fullstop.discard();
 		a.add( ProgramID() );
 		a.add( DivisionName() );
+		a.add(  MainLogicSection());
 	    a.add(Remarks());
-		a.add(MainLogic());
+	    a.add(StatementSection());
+	    a.add(StatementSection2());
+	    a.add(StatementSection3());
 		a.add( SectionName() );
 	    a.add( DateWritten() );
+	    a.add(DecimalToBase());
+	    a.add( DecimalToBaseSearch());
+	    a.add(DecimalToBasePerform());
+	    a.add(DecimalToBaseDivide());
+	    a.add(DecimalToBaseSubtract());
+	    a.add(DecimalToBaseIfStatement() );
 		a.add(new Empty());
 		return a;
 	}
@@ -195,16 +204,109 @@ public class CobolParser {
 	}
 	
 	//this method is to create the main logic part
-	protected Parser MainLogic() {
+	protected Parser MainLogicSection() {
 		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("display") );
-		s.add(new Symbol("\"").discard());	
-		s.add(new Word().setAssembler(new MainLogicAssembler()));
-		s.add(new Symbol("\"").discard());	
-		return s;
+		s.add(new CaselessLiteral("main-logic"));
+		s.add(new Symbol('.').discard());
+			s.add(new Word() );
+			//s.add(new Word() );
+		s.setAssembler(new MainLogicAssembler());
+	return s;
 		
+	}
+
+	
+	protected Parser StatementSection() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("display"));
+	   //  s.add(new Word() );
+	   //  s.add(new Word() );
+		s.setAssembler(new MainLogicSectionAssembler());
+	return s;
+		
+	}
+	
+	protected Parser StatementSection2() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("accept"));
+	    // s.add(new Word() );
+	   //  s.add(new Word() );
+		s.setAssembler(new MainLogicSectionAssembler());
+	return s;
+		
+	}
+	
+	protected Parser DecimalToBasePerform() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("perform"));
+	     s.add(new CaselessLiteral("until"));
+	   //  s.add(new Word() );
+		s.setAssembler(new PerformUntilAssembler());
+	return s;
+		
+	}
+	
+	
+	protected Parser StatementSection3() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("perform"));
+	    //s.add(new Word() );
+	   //  s.add(new Word() );
+		s.setAssembler(new MainLogicSectionAssembler());
+	return s;
+		
+	}
+	
+//	protected Parser DecimalToBaseMove() {
+//		Sequence s = new Sequence();
+//		s.add(new CaselessLiteral("move"));
+		
+   // s.add(new Word() );
+//	     s.add(new Word() );
+//		 s.setAssembler(new PerformUntilAssembler() );
+//	     return s;
+		
+//	}
+	
+	protected Parser DecimalToBase() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("decimal-to-base") );
+		s.add(new Symbol('.').discard());	
+		 s.add(new Word() );
+		s.setAssembler(new DecimalToBaseAssembler());
+		return s;
+    }
+	
+	protected Parser DecimalToBaseDivide() {
+		Sequence s = new Sequence();
+		s.add(new CaselessLiteral("divide") );
+		 s.add(new Word() );
+		s.setAssembler(new DesimalToBaseDivideAssembler());
+		return s;
+	}
+	
+	protected Parser DecimalToBaseSearch() {
+		 Sequence s = new Sequence();
+		 s.add(new CaselessLiteral("search") );
+		 s.add(new Word() );
+		 s.setAssembler(new DesimalToBaseSearchAssembler());
+		return s;
+	}
+	protected Parser DecimalToBaseSubtract() {
+		 Sequence s = new Sequence();
+		 s.add(new CaselessLiteral("subtract") );
+		 s.setAssembler(new DesimalToBaseSubtractAssembler());
+		 return s;
+	}
+	
+	protected Parser DecimalToBaseIfStatement() {
+		 Sequence s = new Sequence();
+		 s.add(new CaselessLiteral("if") );
+		 s.setAssembler(new DesimalToBaseIfAssembler());
+		 return s;
 	}
 	
 	
 	
 }
+

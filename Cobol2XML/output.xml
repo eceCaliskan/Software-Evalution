@@ -29,7 +29,20 @@
         <base_16 Value="16.0"/>
     </Constant>
     <division>procedure</division>
+    <main-logic>
+        <statement>display Base : no</statement>
+        <statement>accept current_base convert</statement>
+        <statement>display Value : no</statement>
+        <statement>accept entry_char</statement>
+        <statement>perform base-to-decimal thru base-to-decimal-ex</statement>
+        <statement>display Decimal value : entry_char</statement>
+        <statement>perform decimal-to-base thru decimal-to-base-ex display Base : current_base value : entry_char</statement>
+        <statement>accept omitted</statement>
+        <statement>perform until w_number &lt; current_base</statement>
+        <statement>perform test after varying ind from 1.0 by 1.0 until ind = 16.0</statement>
+    </main-logic>
     <comment>convert from decimal to base system</comment>
+    <decimal-to-base>move entry_number to w_number move spaces to entry_char</decimal-to-base>
     <comment>convert from base to dicimal system</comment>
     <comment>allineamento a destra della variabile entry_char ( ver 2.3 0.1 o sup )</comment>
 </cobol>

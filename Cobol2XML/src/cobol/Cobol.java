@@ -22,6 +22,8 @@
 
 package cobol;
 
+import java.util.ArrayList;
+
 import utensil.*;
 
 public class Cobol implements PubliclyCloneable {
@@ -37,8 +39,55 @@ public class Cobol implements PubliclyCloneable {
 	protected String remarks;
 	protected String mainLogic;
     protected int lineNumber = 0;
+    protected String decimalToBase;
+    protected String statement;
+    protected String perform;
+    public String getIfStatement() {
+		return ifStatement;
+	}
+	public void setIfStatement(String ifStatement) {
+		this.ifStatement = ifStatement;
+	}
+
+	protected String divide;
+    protected String search;
+    protected String subtraction;
+    protected String ifStatement;
+    
+    public String getSubtraction() {
+		return subtraction;
+	}
+	public void setSubtraction(String substraction) {
+		this.subtraction = substraction;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	public String getDivide() {
+		return divide;
+	}
+	public void setDivide(String divide) {
+		this.divide = divide;
+	}
     
     
+	public String getPerform() {
+		return perform;
+	}
+	public void setPerform(String perform) {
+		this.perform = perform;
+	}
+	public String getStatement() {
+		return statement;
+	}
+	public void setStatement(String statement) {
+		this.statement = statement;
+	}
+	
+
     
     public String getMainLogic() {
 		return mainLogic;
@@ -46,7 +95,12 @@ public class Cobol implements PubliclyCloneable {
 	public void setMainLogic(String mainLogic) {
 		this.mainLogic = mainLogic;
 	}
-
+	public String getDecimalToBase() {
+		return decimalToBase;
+	}
+	public void setDecimalToBase(String decimalToBase) {
+		this.decimalToBase = decimalToBase;
+	}
     
     
 	public String getRemarks() {

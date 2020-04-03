@@ -16,17 +16,23 @@ public class MainLogicAssembler extends Assembler {
 		Token t = (Token) a.pop();
 		
 		
-		
-	   if(t.sval() != null) {
-				c.setMainLogic(t.sval()+ defaultDelimiter() + a.remainder(defaultDelimiter()) );
-				a.setTarget(c); }
-			}
 
-		public String defaultDelimiter() {
-			String delimiter = "  ";
-			return delimiter; 
-			}
+	    c.setMainLogic(t.sval().trim()+ defaultDelimiter() + a.remainder(defaultDelimiter() )); //System.out.println("Token string[4]: " +
+	    c.getMainLogic() ;
+		
+			
+			
+		
+		     
+		     a.setTarget(c);
 
 	}
+	
+
+	public String defaultDelimiter() {
+		String delimiter = " ";
+		return delimiter; 
+		}
+}
 
 

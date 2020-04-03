@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <cobol>
     <division>identification</division>
-    <Program-ID>base</Program-ID>
     <day-date-written>7</day-date-written>
     <month-date-written>mar</month-date-written>
     <year-date-written>1995</year-date-written>
+    <remarks>This program convert a value of a generic system base to a numeric value and viceversa .</remarks>
     <division>data</division>
     <section>working-storage</section>
     <Constant>
@@ -28,4 +28,25 @@
         <base_16 Value="16.0"/>
     </Constant>
     <division>procedure</division>
+    <main-logic>
+        <statement>display "Base:  " no</statement>
+        <statement>accept current_base convert</statement>
+        <statement>display "Value: " no</statement>
+        <statement>accept entry_char</statement>
+        <statement>perform base-to-decimal thru base-to-decimal-ex</statement>
+        <statement>display "Decimal  value: " entry_char</statement>
+        <statement>perform decimal-to-base thru decimal-to-base-ex display "Base: " current_base " value: " entry_char</statement>
+        <statement>accept omitted</statement>
+    </main-logic>
+    <comment>convert from decimal to base system</comment>
+    <decimal-to-base>
+        move entry_number to w_number move spaces to entry_char move 16.0 to ind
+        <perform until="until w_number &lt; current_base">
+            <divide>current_base into w_number giving w_number remainder rest_divide</divide>
+            <search>all hex_table at end continue when dec_value ( hex_idx ) is = rest_divide move hex_value ( hex_idx ) to entry_char ( ind : 1.0 )</search>
+            <subtraction>subtract 1.0 from ind</subtraction>
+        </perform>
+        <if-statement>if w_number not = 0.0 search all hex_table at end continue when dec_value ( hex_idx ) is = w_number move hex_value ( hex_idx ) to entry_char ( ind : 1.0 ) end_search end-if .</if-statement>
+    </decimal-to-base>
+    <comment>allineamento a destra della variabile entry_char ( ver 2.3 0.1 o sup )</comment>
 </cobol>
