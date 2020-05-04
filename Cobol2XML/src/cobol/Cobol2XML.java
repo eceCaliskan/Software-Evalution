@@ -66,7 +66,7 @@ public class Cobol2XML {
 		 * A rather crude approach is to hard code the filename for the cobol source file, like this
 		 * InputStream is = new FileInputStream("C:\\Users\\sgs442\\eclipse-workspace\\CobolParser1\\base.cbl");
 		 */
-		InputStream is = new FileInputStream("/Users/ececaliskan/git/Software-Evalutionfinal/Cobol2XML/cobol.cbl");
+		InputStream is = new FileInputStream("/Users/ececaliskan/Desktop/SoftwareEvolution2-master-2/Cobol2XML/cobol.cbl");
 		BufferedReader r = 	new BufferedReader(new InputStreamReader(is));
 
 		Tokenizer t = CobolParser.tokenizer();
@@ -86,80 +86,62 @@ public class Cobol2XML {
 			String line1="";
 			String line2="";
 			//to deal with the remarks part
-			if(s.contains("remarks") )  {
-				line1 =r.readLine(); //first line is space
-				while(!line1.contains(".") ||  !line1.contains("")) {
-				line2 =r.readLine(); //second line actual remark starts
-				line1 +=  line2.trim() + " ";       // to all the lines together
+			
+			
+			//If the line contains keywords like remarks and main-logic
+			if(s.contains("remarks") ||  s.contains("main-logic.") )  {
+				line1 =r.readLine();    //first line is space so we ignore it
+				if(!line1.contains(".") ||  !line1.contains("")) {
+				line2 =r.readLine();         //second line actual remark and main-logic starts
+				line1 +=  line2.trim() ;     //to add all the lines together
 			
 				}
-			s=s+line1;	
+			s=s+line1;	                     //setting remark. ....  and main-logic. ..... parts
+			                                 //so that it is readable by the CobolParser
 			s=s.replaceAll("\"", "");
 			}
 		
-			if(s.contains("main-logic."))  {
-				line1 =r.readLine(); //first line is space
-				if(!line1.contains(".") || !line1.contains("")) {
-				line2 =r.readLine(); //second line actual remark starts
-			    line1 += line2  ;       // to all the lines together
-				}
-			s="main-logic."+line1;	 
-			}
 			
 			
-					
-
 			
-			if(  s.contains("decimal-to-base")    ) {
-			  if(!line1.contains("perform "))
-			      line1 =r.readLine(); //first line is space
-			      line2 += line1;
-			      line1 =r.readLine(); //first line is space
-			      line2 += line1;
-			      line1 =r.readLine(); //first line is space
-			      line2 += line1;
-			      s=s+line2;	
-			}
 			
-			if(  s.contains("divide")   ) {
-				   line1 =r.readLine(); //first line is space
-				   s=s+line1;	
-			}
+			//If the line contains keyword decimal-to-base
+           if(  s.contains("decimal-to-base")    ) {
+        	      line1 =r.readLine();       //first move statement
+			      line2 += line1;            //adding it to the string
+				  for(int i =0; i<2; i++) {   //for loop to get the rest move statements
+					  line1 =r.readLine();    // get move statement
+				      line2 += line1;        //add it into string
+				  
+				  }
+			  s=s+line2;	                 //create a new string decimal-to-base.  move.......
+           }
+			    
 			
 	
+			
+	
+			 //If the line contains keywords like search
 			if(  s.contains("search")   ) {
-			line1=r.readLine();
-			while(!line1.contains("end_search")) {
-				line2 +=line1;
+			line1=r.readLine();                //read the next line
+			while(!line1.contains("end_search")) {   //if that line does not contain end search keyword
+				line2 +=line1;             //add it as a line
 				line1=r.readLine();
 			}
 			 s=s+line2;
 		
 		   }
 			
-			if(  s.equals("       search all hex_table          at end               continue          when hex_value( hex_idx ) is = entry_char(ind:1)               move dec_value( hex_idx) to rest_divide")){
+			
+			if(s.equals("       search all hex_table          at end               continue          when hex_value( hex_idx ) is = entry_char(ind:1)               move dec_value( hex_idx) to rest_divide")){
+				//line1=r.readLine();
+				 s="";
 				
-				s= "dd"+s;
+			   }
 					
+		     
 				
-				}
-			
-			if(s.contains("if")) {
-				line1 =r.readLine(); //first line is space
-				while(!line1.contains(".") ||  !line1.contains("")) {
-				line2 =r.readLine(); //second line actual remark starts
-				line1 +=  line2.trim() + " ";       // to all the lines together
-			
-				}
-			s=s+line1;	
-			s=s.replaceAll("\"", "");
-			}
-				
-			
-			
-			
-			
-			t.setString(s);
+		    t.setString(s);
 			Assembly in = new TokenAssembly(t);
 			Assembly out = p.bestMatch(in);
 			Cobol c = new Cobol();
@@ -174,8 +156,7 @@ public class Cobol2XML {
 		}
 		xmlp.writeFile("/Users/ececaliskan/git/Software-Evalutionfinal/Cobol2XML/ output.xml");
 		r.close();
-		Cobol c2 =new Cobol();
-		String s1= c2.getCommentLine();
+		
 		
 	
 		}

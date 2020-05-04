@@ -53,17 +53,18 @@ public class CobolParser {
 	
 		Symbol fullstop = new Symbol('.');
 		fullstop.discard();
-		a.add( ProgramID() );
-		a.add( DivisionName() );
-		a.add(  MainLogicSection());
+		a.add(ProgramID() );
+		a.add(DivisionName() );
+		a.add(MainLogicSection());
 	    a.add(Remarks());
 	    a.add(StatementSection());
 	    a.add(StatementSection2());
 	    a.add(StatementSection3());
-		a.add( SectionName() );
-	    a.add( DateWritten() );
+	    a.add(StatementSection4());
+		a.add(SectionName() );
+	    a.add(DateWritten() );
 	    a.add(DecimalToBase());
-	    a.add( DecimalToBaseSearch());
+	    a.add(DecimalToBaseSearch());
 	    a.add(DecimalToBasePerform());
 	    a.add(DecimalToBaseDivide());
 	    a.add(DecimalToBaseSubtract());
@@ -181,6 +182,12 @@ public class CobolParser {
 	s.setAssembler(new ConstantValueAssembler()); return s;
 	}
 	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    ***---comment line section;
+	 *
+	 */
 	protected Parser commentLine() { //System.out.println("commentLine()");
 		Sequence s = new Sequence();
 		s.add(new Symbol("*"));
@@ -193,116 +200,220 @@ public class CobolParser {
 		return s;
 		}
 	
-	//this method is to create the remarks part
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    remarks.
+	 *    
+	 *           remarks line
+	 *
+	 */
 	protected Parser Remarks() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("remarks") );
-		s.add(new Symbol('.').discard());	
-		s.add(new Word().setAssembler(new RemarksAssembler()));
+		Sequence s = new Sequence(); //create a new sequence
+		s.add(new CaselessLiteral("remarks") ); //find the remarks keyword
+		s.add(new Symbol('.').discard());	    //remove . 
+		s.add(new Word().setAssembler(new RemarksAssembler())); //add as a new word to 
+		//the subclass of the Assembler
 		return s;
-		
 	}
 	
-	//this method is to create the main logic part
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    main-logic.
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser MainLogicSection() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("main-logic"));
-		s.add(new Symbol('.').discard());
-			s.add(new Word() );
-			//s.add(new Word() );
-		s.setAssembler(new MainLogicAssembler());
+		Sequence s = new Sequence();//create a new sequence
+		s.add(new CaselessLiteral("main-logic"));//find the main-logic keyword
+		s.add(new Symbol('.').discard()); //remove . 
+	    s.setAssembler(new MainLogicAssembler());//add as a new word to 
+		//the subclass of the Assembler
 	return s;
 		
 	}
 
-	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    display ............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser StatementSection() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("display"));
-	   //  s.add(new Word() );
-	   //  s.add(new Word() );
-		s.setAssembler(new MainLogicSectionAssembler());
+		Sequence s = new Sequence();   //create a new sequence
+		s.add(new CaselessLiteral("display"));  //find the main-logic keyword
+	    s.setAssembler(new MainLogicSectionAssembler());//add as a new word to 
+		//the subclass of the Assembler
 	return s;
 		
 	}
 	
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    accept ............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser StatementSection2() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("accept"));
-	    // s.add(new Word() );
-	   //  s.add(new Word() );
-		s.setAssembler(new MainLogicSectionAssembler());
+		Sequence s = new Sequence();    //create a new sequence
+		s.add(new CaselessLiteral("accept"));   //find the accept keyword
+	    s.setAssembler(new MainLogicSectionAssembler());  //add as a new word to 
+		//the subclass of the Assembler
+	   
 	return s;
-		
-	}
-	
-	protected Parser DecimalToBasePerform() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("perform"));
-	     s.add(new CaselessLiteral("until"));
-	   //  s.add(new Word() );
-		s.setAssembler(new PerformUntilAssembler());
-	return s;
-		
-	}
+    }
 	
 	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    perform base-to-decimal ............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser StatementSection3() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("perform"));
-	    //s.add(new Word() );
-	   //  s.add(new Word() );
-		s.setAssembler(new MainLogicSectionAssembler());
+		Sequence s = new Sequence();    //create a new sequence
+		s.add(new CaselessLiteral("perform"));  //find the perform keyword
+		s.add(new CaselessLiteral("base-to-decimal"));//find the keyword
+	    s.setAssembler(new MainLogicSectionAssembler());//add as a new word to 
+		//the subclass of the Assembler
 	return s;
-		
 	}
 	
-//	protected Parser DecimalToBaseMove() {
-//		Sequence s = new Sequence();
-//		s.add(new CaselessLiteral("move"));
-		
-   // s.add(new Word() );
-//	     s.add(new Word() );
-//		 s.setAssembler(new PerformUntilAssembler() );
-//	     return s;
-		
-//	}
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    perform decimal-to-base ............
+	 *    
+	 *           
+	 *
+	 */
+	protected Parser StatementSection4() {
+		Sequence s = new Sequence();   //create a new sequence
+		s.add(new CaselessLiteral("perform"));//find the perform keyword
+		s.add(new CaselessLiteral("decimal-to-base"));//find the keyword
+	    s.setAssembler(new MainLogicSectionAssembler());//add as a new word to 
+		//the subclass of the Assembler
+	return s;
+	}
 	
-	protected Parser DecimalToBase() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("decimal-to-base") );
-		s.add(new Symbol('.').discard());	
-		 s.add(new Word() );
-		s.setAssembler(new DecimalToBaseAssembler());
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    decimal-to-base...
+	 *    move..... move...... move......
+	 *    
+	 *           
+	 *
+	 */
+    protected Parser DecimalToBase() {
+		Sequence s = new Sequence(); //create a new sequence
+		s.add(new CaselessLiteral("decimal-to-base") );//find the decimal-to-base keyword
+		s.add(new Symbol('.').discard());	//discarding . 
+		s.add(new Word() );                 //adding a new word to the sequence
+		s.setAssembler(new DecimalToBaseAssembler());//setting 
+		//the subclass of the Assembler
 		return s;
     }
 	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    perform until ............
+	 *    
+	 *           
+	 *
+	 */
+	protected Parser DecimalToBasePerform() {
+		Sequence s = new Sequence();     //create a new sequence
+		s.add(new CaselessLiteral("perform"));//find the perform keyword
+	    s.add(new CaselessLiteral("until"));//find the until keyword
+		s.setAssembler(new PerformUntilAssembler());//setting 
+		//the subclass of the Assembler
+	return s;
+		
+	}
+	
+	
+	
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    divide...............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser DecimalToBaseDivide() {
-		Sequence s = new Sequence();
-		s.add(new CaselessLiteral("divide") );
-		 s.add(new Word() );
-		s.setAssembler(new DesimalToBaseDivideAssembler());
+		Sequence s = new Sequence();    //create a new sequence
+		s.add(new CaselessLiteral("divide") );//find the divide keyword
+		s.add(new Word() ); //adding a new word to the sequence
+		s.setAssembler(new DesimalToBaseDivideAssembler());//setting 
+		//the subclass of the Assembler
 		return s;
 	}
 	
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    search...............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser DecimalToBaseSearch() {
-		 Sequence s = new Sequence();
-		 s.add(new CaselessLiteral("search") );
-		 s.add(new Word() );
-		 s.setAssembler(new DesimalToBaseSearchAssembler());
+		 Sequence s = new Sequence();      //create a new sequence
+		 s.add(new CaselessLiteral("search") );//find the search keyword
+		 s.add(new Word() );//adding a new word to the sequence
+		 s.setAssembler(new DesimalToBaseSearchAssembler());//setting 
+			//the subclass of the Assembler
 		return s;
 	}
+	
+	
+	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    subtract...............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser DecimalToBaseSubtract() {
-		 Sequence s = new Sequence();
-		 s.add(new CaselessLiteral("subtract") );
-		 s.setAssembler(new DesimalToBaseSubtractAssembler());
+		 Sequence s = new Sequence();//create a new sequence
+		 s.add(new CaselessLiteral("subtract") );//find the subtract keyword
+		 s.setAssembler(new DesimalToBaseSubtractAssembler());//setting 
+			//the subclass of the Assembler
 		 return s;
 	}
 	
+	/*
+	 * Return a parser that will recognise the grammar:
+	 * 
+	 *    if...............
+	 *    
+	 *           
+	 *
+	 */
 	protected Parser DecimalToBaseIfStatement() {
-		 Sequence s = new Sequence();
-		 s.add(new CaselessLiteral("if") );
-		 s.setAssembler(new DesimalToBaseIfAssembler());
+		 Sequence s = new Sequence();//create a new sequence
+		 s.add(new CaselessLiteral("if") );//find the if keyword
+		 s.add(new Word() );//adding a new word to the sequence
+		 s.setAssembler(new DesimalToBaseIfAssembler());//setting 
+			//the subclass of the Assembler
 		 return s;
 	}
 	

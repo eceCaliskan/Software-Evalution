@@ -42,17 +42,28 @@ public class Cobol implements PubliclyCloneable {
     protected String decimalToBase;
     protected String statement;
     protected String perform;
-    public String getIfStatement() {
+	protected String divide;
+    protected String search;
+    protected String search2;
+    protected String subtraction;
+    protected String ifStatement;
+    
+    
+    
+    public String getSearch2() {
+		return search2;
+	}
+	public void setSearch2(String search2) {
+		this.search2 = search2;
+	}
+	public String getIfStatement() {
 		return ifStatement;
 	}
 	public void setIfStatement(String ifStatement) {
 		this.ifStatement = ifStatement;
 	}
 
-	protected String divide;
-    protected String search;
-    protected String subtraction;
-    protected String ifStatement;
+
     
     public String getSubtraction() {
 		return subtraction;
